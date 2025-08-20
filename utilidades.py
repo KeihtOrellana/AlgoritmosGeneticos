@@ -4,7 +4,7 @@ import random
 def real_randomico():
     return random.random()
 
-#Generar un número entero randóminco entre [0 y 1].
+#Generar un número entero randóminco entre [1 y N].
 def entero_randomico(N):
-    return random.randint(0,N)
+    return random.randint(1,N)
 
