@@ -12,5 +12,5 @@ def inicializar_poblacion(tamano_población, N):
 def crear_individuo_aleatorio(N):
     individuo = [0] * N
     for i in range(N):
-        individuo[i] = entero_randomico(N-1)
-    return individuo    
+        individuo[i] = entero_randomico(N)
+    return individuo 
