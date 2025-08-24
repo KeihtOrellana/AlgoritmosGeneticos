@@ -4,11 +4,11 @@ from typing import List, Tuple
 import random
 
 def inicializar_poblacion(tamano_poblacion, N):
-    población = []
+    poblacion = []
     for i in range(tamano_poblacion):
         individuo = crear_individuo_aleatorio(N)
-        población.append(individuo)
-    return población
+        poblacion.append(individuo)
+    return poblacion
 
 
 def crear_individuo_aleatorio(N):
@@ -56,4 +56,3 @@ def seleccion_ruleta(poblacion: List[List[int]], fitnesses: List[int]) -> List[i
             return ind[:]
     # Por estabilidad numérica
     return poblacion[-1][:]
-
