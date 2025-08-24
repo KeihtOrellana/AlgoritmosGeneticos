@@ -3,9 +3,9 @@ from utilidades import real_randomico
 from typing import List, Tuple
 import random
 
-def inicializar_poblacion(tamano_poblacion, N):
-    poblacion = []
-    for i in range(tamano_poblacion):
+def inicializar_poblacion(tamano_población, N):
+    población = []
+    for i in range(tamano_población):
         individuo = crear_individuo_aleatorio(N)
         poblacion.append(individuo)
     return poblacion
