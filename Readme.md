@@ -7,3 +7,6 @@ Este problema pertenece a la clase de **problemas de optimización combinatoria*
 
 En este trabajo se seleccionó la metaheurística de **algoritmos genéticos (AG)**, inspirada en la evolución biológica.  
 El AG mantiene una **población de soluciones candidatas** que evoluciona generación tras generación mediante operadores de **selección, cruce y mutación**, con el objetivo de **maximizar una función de aptitud (fitness)**.
+
+ py .\Genetico.py --N 51  --poblacion 250 --pcruza 0.95 --pmut 0.05 --iter 5000 --semilla 42
+
