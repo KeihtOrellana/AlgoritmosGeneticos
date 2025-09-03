@@ -56,3 +56,51 @@ def seleccion_ruleta(poblacion: List[List[int]], fitnesses: List[int]) -> List[i
             return ind[:]
     # Por estabilidad numérica
     return poblacion[-1][:]
+
+def cruzar_un_punto(padre: List[int], madre: List[int]) -> Tuple[List[int], List[int]]:
+    """Cruza de 1 punto (compatible con representación libre)."""
+    n = len(padre)
+    if n <= 1:
+        return padre[:], madre[:]
+    punto = random.randint(1, n - 1)
+    h1 = padre[:punto] + madre[punto:]
+    h2 = madre[:punto] + padre[punto:]
+    return h1, h2
+
+def cruzar_un_punto(padre: List[int], madre: List[int]) -> Tuple[List[int], List[int]]:
+    """Cruza de 1 punto (compatible con representación libre)."""
+    n = len(padre)
+    if n <= 1:
+        return padre[:], madre[:]
+    punto = random.randint(1, n - 1)
+    h1 = padre[:punto] + madre[punto:]
+    h2 = madre[:punto] + padre[punto:]
+    return h1, h2
+
+def mutar_reset(individuo: List[int], N: int, prob_mut: float) -> None:
+    """Mutación: reasigna la columna de una fila elegida al azar."""
+    if random.random() < prob_mut:
+        fila = random.randrange(N)
+        individuo[fila] = entero_randomico(N)  # asume [0..N-1]
+
+def evaluar_poblacion(poblacion: List[List[int]]) -> List[int]:
+    return [fitness_reinas_seguras(ind) for ind in poblacion]
+
+def es_solucion(individuo: List[int]) -> bool:
+    return fitness_reinas_seguras(individuo) == len(individuo)
+
+def imprimir_tablero(individuo: List[int]) -> None:
+    n = len(individuo)
+    for r in range(n):
+        fila = []
+        for c in range(n):
+            fila.append("Q" if individuo[r] == c else ".")
+        print(" ".join(fila))
+    print()
+
+def reducir_poblacion(poblacion: List[List[int]], tamano_objetivo: int) -> List[List[int]]:
+    """
+    Elitismo por truncamiento: ordena por fitness desc y corta.
+    """
+    poblacion_ordenada = sorted(poblacion, key=fitness_reinas_seguras, reverse=True)
+    return poblacion_ordenada[:tamano_objetivo]

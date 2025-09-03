@@ -8,3 +8,12 @@ def real_randomico():
 def entero_randomico(N):
     return random.randint(1,N)
 
+def set_semilla(seed: int | None) -> None:
+    if seed is not None:
+        random.seed(seed)
+
+def real_randomico() -> float:
+    return random.random()
+
+def entero_randomico(N: int) -> int:
+    return random.randrange(N)
