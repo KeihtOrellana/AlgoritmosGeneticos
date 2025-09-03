@@ -1,13 +1,15 @@
-# Genetico.py
 from typing import List, Tuple
-import argparse, sys, random
+import argparse
+import sys
+import random
+
 from utilidades import set_semilla
 from Nreinas import (
     inicializar_poblacion,
     evaluar_poblacion,
     seleccion_ruleta,
-    cruzar_un_punto,
-    mutar_reset,
+    cruzar_un_punto_con_correccion,  # Cruza con corrección
+    mutar_swap,                       # Mutación por swap
     reducir_poblacion,
     es_solucion,
     imprimir_tablero,
@@ -23,8 +25,8 @@ def algoritmo_genetico_n_reinas(
 ) -> Tuple[List[int] | None, int]:
     """
     GA generacional con reducción por truncamiento elitista.
-    - Genera hijos por cruza 1 punto
-    - Aplica mutación
+    - Genera hijos por cruza corregida de 1 punto
+    - Aplica mutación por swap
     - Combina padres + hijos y reduce
     - Devuelve (solución, iteración_encontrada) o (None, iteraciones)
     """
@@ -36,7 +38,7 @@ def algoritmo_genetico_n_reinas(
         if it % 100 == 0:
             best = max(fitnesses)
             avg = sum(fitnesses) / len(fitnesses)
-            print(f"[it {it}] best={best}  avg={avg}")
+            print(f"[it {it}] best={best}  avg={avg:.2f}")
 
         # ¿solución exacta?
         for ind, fit in zip(poblacion, fitnesses):
@@ -50,13 +52,13 @@ def algoritmo_genetico_n_reinas(
             madre = seleccion_ruleta(poblacion, fitnesses)
 
             if random.random() < prob_cruza:
-                h1, h2 = cruzar_un_punto(padre, madre)
+                h1, h2 = cruzar_un_punto_con_correccion(padre, madre)
             else:
                 h1, h2 = padre[:], madre[:]
 
-            # Mutación
-            mutar_reset(h1, N, prob_mut)
-            mutar_reset(h2, N, prob_mut)
+            # Mutación por swap
+            mutar_swap(h1, prob_mut)
+            mutar_swap(h2, prob_mut)
 
             hijos.append(h1)
             if len(hijos) < tamano_poblacion:
@@ -68,7 +70,6 @@ def algoritmo_genetico_n_reinas(
     return None, iteraciones
 
 if __name__ == "__main__":
-    import random
     parser = argparse.ArgumentParser(description="N-Reinas con Algoritmo Genético")
     parser.add_argument("--semilla", type=int, default=None, help="Valor de la semilla")
     parser.add_argument("--N", type=int, default=8, help="Tamaño del tablero (N)")
@@ -99,6 +100,4 @@ if __name__ == "__main__":
         sys.exit(0)
     else:
         print("\nNo se encontró solución exacta dentro del límite de iteraciones.")
-        mejor = max(inicializar_poblacion(1, args.N) + [], key=fitness_reinas_seguras)  # dummy para tipado
-        # Nota: ya podrías haber guardado el 'mejor' en el loop si quieres mostrarlo.
         sys.exit(1)

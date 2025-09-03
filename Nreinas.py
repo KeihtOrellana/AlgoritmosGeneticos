@@ -12,10 +12,10 @@ def inicializar_poblacion(tamano_poblacion, N):
 
 
 def crear_individuo_aleatorio(N):
-    individuo = [0] * N
-    for i in range(N):
-        individuo[i] = entero_randomico(N)
+    individuo = list(range(N))
+    random.shuffle(individuo)
     return individuo
+
 
 
 def fitness_reinas_seguras(individuo: List[int]) -> int:
@@ -57,25 +57,49 @@ def seleccion_ruleta(poblacion: List[List[int]], fitnesses: List[int]) -> List[i
     # Por estabilidad numérica
     return poblacion[-1][:]
 
-def cruzar_un_punto(padre: List[int], madre: List[int]) -> Tuple[List[int], List[int]]:
-    """Cruza de 1 punto (compatible con representación libre)."""
+import random
+from typing import List, Tuple
+
+def cruzar_un_punto_con_correccion(padre: List[int], madre: List[int]) -> Tuple[List[int], List[int]]:
     n = len(padre)
     if n <= 1:
         return padre[:], madre[:]
+
     punto = random.randint(1, n - 1)
     h1 = padre[:punto] + madre[punto:]
     h2 = madre[:punto] + padre[punto:]
+
+    h1 = corregir_perm(h1, n)
+    h2 = corregir_perm(h2, n)
+
     return h1, h2
 
-def cruzar_un_punto(padre: List[int], madre: List[int]) -> Tuple[List[int], List[int]]:
-    """Cruza de 1 punto (compatible con representación libre)."""
-    n = len(padre)
-    if n <= 1:
-        return padre[:], madre[:]
-    punto = random.randint(1, n - 1)
-    h1 = padre[:punto] + madre[punto:]
-    h2 = madre[:punto] + padre[punto:]
-    return h1, h2
+def corregir_perm(hijo: List[int], n: int) -> List[int]:
+    contador = [0] * n
+    for val in hijo:
+        contador[val] += 1
+
+    faltantes = [i for i, c in enumerate(contador) if c == 0]
+
+    falt_index = 0
+    for i in range(len(hijo)):
+        if contador[hijo[i]] > 1:
+            contador[hijo[i]] -= 1
+            hijo[i] = faltantes[falt_index]
+            falt_index += 1
+
+    return hijo
+
+
+def mutar_swap(individuo: List[int], prob_mut: float) -> None:
+    if random.random() < prob_mut:
+        n = len(individuo)
+        i, j = random.sample(range(n), 2)
+        individuo[i], individuo[j] = individuo[j], individuo[i]
+
+
+
+
 
 def mutar_reset(individuo: List[int], N: int, prob_mut: float) -> None:
     """Mutación: reasigna la columna de una fila elegida al azar."""
